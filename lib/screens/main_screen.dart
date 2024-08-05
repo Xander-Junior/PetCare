@@ -3,6 +3,8 @@ import 'package:petcare/screens/home_screen.dart';
 import 'package:petcare/screens/home_screen1.dart';
 
 class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
+
   @override
   _MainScreenState createState() => _MainScreenState();
 }
@@ -10,9 +12,9 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  static List<Widget> _widgetOptions = <Widget>[
-    HomeScreen(),
-    HomeScreen1(),
+  static final List<Widget> _widgetOptions = <Widget>[
+    const HomeScreen(),
+    const HomeScreen1(),
   ];
 
   void _onItemTapped(int index) {
@@ -25,8 +27,8 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('PetCare'),
-        backgroundColor: Color(0xFFD3E004),
+        title: const Text('PetCare'),
+        backgroundColor: const Color(0xFFD3E004),
       ),
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
@@ -41,7 +43,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Color(0xFFD3E004),
+        selectedItemColor: const Color(0xFFD3E004),
         onTap: _onItemTapped,
       ),
     );

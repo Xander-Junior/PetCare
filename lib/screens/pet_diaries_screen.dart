@@ -3,12 +3,14 @@ import 'package:petcare/screens/new_entry_screen.dart';
 import 'package:petcare/screens/edit_entry_screen.dart';
 
 class PetDiariesScreen extends StatelessWidget {
+  const PetDiariesScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pet Diaries'),
-        backgroundColor: Color(0xFFD3E004),
+        title: const Text('Pet Diaries'),
+        backgroundColor: const Color(0xFFD3E004),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -27,14 +29,14 @@ class PetDiariesScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => NewEntryScreen()),
+                  MaterialPageRoute(builder: (context) => const NewEntryScreen()),
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFFD3E004),
-                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                backgroundColor: const Color(0xFFD3E004),
+                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
               ),
-              child: Text('Add New Entry', style: TextStyle(color: Colors.white)),
+              child: const Text('Add New Entry', style: TextStyle(color: Colors.white)),
             ),
           ],
         ),
@@ -44,16 +46,16 @@ class PetDiariesScreen extends StatelessWidget {
 
   Widget _buildDiaryCard(BuildContext context, String date, String title, String content) {
     return Card(
-      margin: EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 16),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(date, style: TextStyle(fontWeight: FontWeight.bold)),
-            SizedBox(height: 8),
-            Text(title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            SizedBox(height: 8),
+            Text(date, style: const TextStyle(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
+            Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 8),
             Text(content),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -65,13 +67,13 @@ class PetDiariesScreen extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => EditEntryScreen(date: date, title: title, content: content)),
                     );
                   },
-                  child: Text('Edit', style: TextStyle(color: Colors.green)),
+                  child: const Text('Edit', style: TextStyle(color: Colors.green)),
                 ),
                 TextButton(
                   onPressed: () {
                     // Implement delete functionality
                   },
-                  child: Text('Delete', style: TextStyle(color: Colors.red)),
+                  child: const Text('Delete', style: TextStyle(color: Colors.red)),
                 ),
               ],
             ),

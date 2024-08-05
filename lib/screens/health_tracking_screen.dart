@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:flutter_charts/flutter_charts.dart';
 import 'edit_health_record_screen.dart';  // Import the new screen
 
 class HealthTrackingScreen extends StatefulWidget {
+  const HealthTrackingScreen({super.key});
+
   @override
   _HealthTrackingScreenState createState() => _HealthTrackingScreenState();
 }
@@ -49,26 +50,26 @@ class _HealthTrackingScreenState extends State<HealthTrackingScreen> {
         String tempTemperature = temperature;
         String tempHeartRate = heartRate;
         return AlertDialog(
-          title: Text('Edit Overview'),
+          title: const Text('Edit Overview'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                decoration: InputDecoration(labelText: 'Weight'),
+                decoration: const InputDecoration(labelText: 'Weight'),
                 onChanged: (value) {
                   tempWeight = value;
                 },
                 controller: TextEditingController(text: weight),
               ),
               TextField(
-                decoration: InputDecoration(labelText: 'Temperature'),
+                decoration: const InputDecoration(labelText: 'Temperature'),
                 onChanged: (value) {
                   tempTemperature = value;
                 },
                 controller: TextEditingController(text: temperature),
               ),
               TextField(
-                decoration: InputDecoration(labelText: 'Heart Rate'),
+                decoration: const InputDecoration(labelText: 'Heart Rate'),
                 onChanged: (value) {
                   tempHeartRate = value;
                 },
@@ -86,7 +87,7 @@ class _HealthTrackingScreenState extends State<HealthTrackingScreen> {
                 });
                 Navigator.of(context).pop();
               },
-              child: Text('Save'),
+              child: const Text('Save'),
             ),
           ],
         );
@@ -98,11 +99,11 @@ class _HealthTrackingScreenState extends State<HealthTrackingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Health Tracking'),
-        backgroundColor: Color(0xFFD3E004),
+        title: const Text('Health Tracking'),
+        backgroundColor: const Color(0xFFD3E004),
         actions: [
           IconButton(
-            icon: Icon(Icons.settings),
+            icon: const Icon(Icons.settings),
             onPressed: () {
               // Implement settings functionality
             },
@@ -116,8 +117,8 @@ class _HealthTrackingScreenState extends State<HealthTrackingScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Card(
-                color: Color(0xFFFFF9C4), // Light yellow color
-                margin: EdgeInsets.only(bottom: 16),
+                color: const Color(0xFFFFF9C4), // Light yellow color
+                margin: const EdgeInsets.only(bottom: 16),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -126,36 +127,36 @@ class _HealthTrackingScreenState extends State<HealthTrackingScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Overview', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                          const Text('Overview', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                           IconButton(
-                            icon: Icon(Icons.edit),
+                            icon: const Icon(Icons.edit),
                             onPressed: _editOverview,
                           ),
                         ],
                       ),
-                      SizedBox(height: 8),
+                      const SizedBox(height: 8),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Column(
                             children: [
-                              Icon(Icons.monitor_weight, color: Color(0xFFD3E004)),
-                              Text('Weight'),
-                              Text(weight, style: TextStyle(fontWeight: FontWeight.bold)),
+                              const Icon(Icons.monitor_weight, color: Color(0xFFD3E004)),
+                              const Text('Weight'),
+                              Text(weight, style: const TextStyle(fontWeight: FontWeight.bold)),
                             ],
                           ),
                           Column(
                             children: [
-                              Icon(Icons.thermostat, color: Color(0xFFD3E004)),
-                              Text('Temperature'),
-                              Text(temperature, style: TextStyle(fontWeight: FontWeight.bold)),
+                              const Icon(Icons.thermostat, color: Color(0xFFD3E004)),
+                              const Text('Temperature'),
+                              Text(temperature, style: const TextStyle(fontWeight: FontWeight.bold)),
                             ],
                           ),
                           Column(
                             children: [
-                              Icon(Icons.favorite, color: Color(0xFFD3E004)),
-                              Text('Heart Rate'),
-                              Text(heartRate, style: TextStyle(fontWeight: FontWeight.bold)),
+                              const Icon(Icons.favorite, color: Color(0xFFD3E004)),
+                              const Text('Heart Rate'),
+                              Text(heartRate, style: const TextStyle(fontWeight: FontWeight.bold)),
                             ],
                           ),
                         ],
@@ -165,26 +166,26 @@ class _HealthTrackingScreenState extends State<HealthTrackingScreen> {
                 ),
               ),
               Card(
-                margin: EdgeInsets.only(bottom: 16),
+                margin: const EdgeInsets.only(bottom: 16),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Health Records', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                      SizedBox(height: 8),
-                      ...healthRecords.map((record) => _buildHealthRecord(record)).toList(),
-                      SizedBox(height: 8),
+                      const Text('Health Records', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 8),
+                      ...healthRecords.map((record) => _buildHealthRecord(record)),
+                      const SizedBox(height: 8),
                       Center(
                         child: ElevatedButton(
                           onPressed: () {
                             _addEditHealthRecord();
                           },
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xFFD3E004),
-                            padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                            backgroundColor: const Color(0xFFD3E004),
+                            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
                           ),
-                          child: Text('Add Record', style: TextStyle(color: Colors.white)),
+                          child: const Text('Add Record', style: TextStyle(color: Colors.white)),
                         ),
                       ),
                     ],
@@ -192,29 +193,29 @@ class _HealthTrackingScreenState extends State<HealthTrackingScreen> {
                 ),
               ),
               Card(
-                color: Color(0xFFFFF9C4), // Light yellow color
-                margin: EdgeInsets.only(bottom: 16),
+                color: const Color(0xFFFFF9C4), // Light yellow color
+                margin: const EdgeInsets.only(bottom: 16),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Health Metrics', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                      SizedBox(height: 8),
-                      Container(
+                      const Text('Health Metrics', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      const SizedBox(height: 8),
+                      SizedBox(
                         height: 200,
                         child: LineChart(
                           painter: LineChartPainter(
                             lineChartContainer: LineChartTopContainer(
                               chartData: ChartData(
-                                dataRows: [
+                                dataRows: const [
                                   [10.0, 20.0, 5.0, 30.0, 5.0, 20.0],
                                   [30.0, 60.0, 16.0, 100.0, 12.0, 120.0],
                                   [25.0, 40.0, 20.0, 80.0, 12.0, 90.0],
                                 ],
-                                xUserLabels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                                dataRowsLegends: ['Series 1', 'Series 2', 'Series 3'],
-                                chartOptions: ChartOptions(),
+                                xUserLabels: const ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                                dataRowsLegends: const ['Series 1', 'Series 2', 'Series 3'],
+                                chartOptions: const ChartOptions(),
                               ),
                             ),
                           ),
@@ -234,15 +235,15 @@ class _HealthTrackingScreenState extends State<HealthTrackingScreen> {
   Widget _buildHealthTip(String title, String description, String imagePath) {
     return ListTile(
       leading: Image.asset(imagePath, width: 50, height: 50, fit: BoxFit.cover),
-      title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
       subtitle: Text(description),
-      contentPadding: EdgeInsets.symmetric(vertical: 8.0),
+      contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
     );
   }
 
   Widget _buildHealthRecord(Map<String, dynamic> record) {
     return Card(
-      margin: EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 16),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
@@ -253,7 +254,7 @@ class _HealthTrackingScreenState extends State<HealthTrackingScreen> {
               children: [
                 Text(
                   record['date']!,
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 Text(record['type']!),
                 Text('Vet: ${record['vet']}'),
@@ -262,7 +263,7 @@ class _HealthTrackingScreenState extends State<HealthTrackingScreen> {
               ],
             ),
             IconButton(
-              icon: Icon(Icons.edit, color: Colors.grey),
+              icon: const Icon(Icons.edit, color: Colors.grey),
               onPressed: () {
                 _addEditHealthRecord(record: record);
               },

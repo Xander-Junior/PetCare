@@ -1,14 +1,77 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 class ProfileScreen extends StatefulWidget {
+  const ProfileScreen({super.key});
+
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  TextEditingController _dobController = TextEditingController();
+  final TextEditingController _dobController = TextEditingController();
+  final TextEditingController _petNameController = TextEditingController();
+  final TextEditingController _breedController = TextEditingController();
   DateTime selectedDate = DateTime.now();
+  File? _imageFile;
+  String? _profileImageUrl;
+  bool _loading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _petNameController.text = prefs.getString('petName') ?? '';
+      _breedController.text = prefs.getString('breed') ?? '';
+      String? dobString = prefs.getString('dob');
+      if (dobString != null) {
+        selectedDate = DateFormat('dd-MM-yyyy').parse(dobString);
+        _dobController.text = dobString;
+      }
+      _profileImageUrl = prefs.getString('petProfileImage');
+    });
+  }
+
+  Future<void> _pickImage() async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+        _profileImageUrl = _imageFile!.path;
+      });
+    }
+  }
+
+  Future<void> _updateProfile() async {
+    setState(() {
+      _loading = true;
+    });
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('petName', _petNameController.text);
+    await prefs.setString('breed', _breedController.text);
+    await prefs.setString('dob', _dobController.text);
+    if (_profileImageUrl != null) {
+      await prefs.setString('petProfileImage', _profileImageUrl!);
+    }
+
+    setState(() {
+      _loading = false;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Profile updated successfully!')),
+    );
+    Navigator.pop(context);  // Go back to the home screen
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +80,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -33,38 +96,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   CircleAvatar(
                     radius: 50,
-                    backgroundImage: AssetImage('assets/bg6.jpg'), // Replace with your image path
+                    backgroundImage: _imageFile != null
+                        ? FileImage(_imageFile!)
+                        : _profileImageUrl != null
+                            ? FileImage(File(_profileImageUrl!))
+                            : const AssetImage('assets/bg6.jpg') as ImageProvider,
+                    child: _profileImageUrl == null ? const Icon(Icons.camera_alt, color: Colors.grey) : null,
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   TextButton(
-                    onPressed: () {
-                      // Implement change profile picture functionality
-                    },
-                    child: Text('Change pet profile picture'),
+                    onPressed: _pickImage,
+                    child: const Text('Change pet profile picture'),
                   ),
                 ],
               ),
             ),
-            SizedBox(height: 16),
-            _buildTextField('Pet\'s name'),
-            SizedBox(height: 16),
-            _buildTextField('Breed'),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
+            _buildTextField('Pet\'s name', _petNameController),
+            const SizedBox(height: 16),
+            _buildTextField('Breed', _breedController),
+            const SizedBox(height: 16),
             _buildDateField('Date of birth'),
-            SizedBox(height: 16),
-            _buildTextField('Email'),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Center(
               child: ElevatedButton(
-                onPressed: () {
-                  // Implement update functionality
-                },
+                onPressed: _updateProfile,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFFD3E004), // Button color
-                  padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
-                  textStyle: TextStyle(fontSize: 18),
+                  backgroundColor: const Color(0xFFD3E004), // Button color
+                  padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                  textStyle: const TextStyle(fontSize: 18),
                 ),
-                child: Text('Update', style: TextStyle(color: Colors.white)),
+                child: _loading
+                    ? const CircularProgressIndicator(color: Colors.white)
+                    : const Text('Update', style: TextStyle(color: Colors.white)),
               ),
             ),
           ],
@@ -73,20 +137,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildTextField(String label) {
+  Widget _buildTextField(String label, TextEditingController controller) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        SizedBox(height: 8),
+        Text(label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
         TextField(
-          style: TextStyle(color: Colors.black), // Set text color to black
+          controller: controller,
+          style: const TextStyle(color: Colors.black), // Set text color to black
           decoration: InputDecoration(
+            hintText: label, // Add hint text
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.grey),
+              borderSide: const BorderSide(color: Colors.grey),
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+            contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
           ),
         ),
       ],
@@ -97,21 +163,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-        SizedBox(height: 8),
+        Text(label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
         TextField(
           controller: _dobController,
-          style: TextStyle(color: Colors.black), // Set text color to black
+          style: const TextStyle(color: Colors.black), // Set text color to black
           decoration: InputDecoration(
+            hintText: label, // Add hint text
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.grey),
+              borderSide: const BorderSide(color: Colors.grey),
             ),
-            contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 16),
-            suffixIcon: Icon(Icons.calendar_today, color: Colors.grey),
+            contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+            suffixIcon: const Icon(Icons.calendar_today, color: Colors.grey),
           ),
           onTap: () async {
-            FocusScope.of(context).requestFocus(new FocusNode());
+            FocusScope.of(context).requestFocus(FocusNode());
             DateTime? picked = await showDatePicker(
               context: context,
               initialDate: selectedDate,

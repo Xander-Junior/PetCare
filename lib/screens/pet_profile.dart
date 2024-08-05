@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class PetProfileScreen extends StatefulWidget {
+  const PetProfileScreen({super.key});
+
   @override
   _PetProfileScreenState createState() => _PetProfileScreenState();
 }
@@ -15,8 +17,8 @@ class _PetProfileScreenState extends State<PetProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Pet Profile'),
-        backgroundColor: Color(0xFFD3E004),
+        title: const Text('Pet Profile'),
+        backgroundColor: const Color(0xFFD3E004),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -24,14 +26,14 @@ class _PetProfileScreenState extends State<PetProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Center(
+              const Center(
                 child: CircleAvatar(
                   backgroundImage: AssetImage('assets/bg6.jpg'),
                   radius: 80,
                 ),
               ),
-              SizedBox(height: 16),
-              Center(
+              const SizedBox(height: 16),
+              const Center(
                 child: Column(
                   children: [
                     Text(
@@ -51,14 +53,14 @@ class _PetProfileScreenState extends State<PetProfileScreen> {
                   ],
                 ),
               ),
-              SizedBox(height: 24),
-              Text(
+              const SizedBox(height: 24),
+              const Text(
                 'Details',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               Card(
-                margin: EdgeInsets.only(bottom: 16),
+                margin: const EdgeInsets.only(bottom: 16),
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -71,23 +73,23 @@ class _PetProfileScreenState extends State<PetProfileScreen> {
                   ),
                 ),
               ),
-              Text(
+              const Text(
                 'Medical History',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 8),
-              ...medicalHistory.map((history) => _buildMedicalHistoryCard(history)).toList(),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
+              ...medicalHistory.map((history) => _buildMedicalHistoryCard(history)),
+              const SizedBox(height: 8),
               Center(
                 child: ElevatedButton(
                   onPressed: () {
                     _addMedicalHistory(context);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFFD3E004),
-                    padding: EdgeInsets.symmetric(vertical: 16, horizontal: 32),
+                    backgroundColor: const Color(0xFFD3E004),
+                    padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
                   ),
-                  child: Text('Add Medical History', style: TextStyle(color: Colors.white)),
+                  child: const Text('Add Medical History', style: TextStyle(color: Colors.white)),
                 ),
               ),
             ],
@@ -105,11 +107,11 @@ class _PetProfileScreenState extends State<PetProfileScreen> {
         children: [
           Text(
             title,
-            style: TextStyle(fontSize: 16),
+            style: const TextStyle(fontSize: 16),
           ),
           Text(
             value,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
         ],
       ),
@@ -118,7 +120,7 @@ class _PetProfileScreenState extends State<PetProfileScreen> {
 
   Widget _buildMedicalHistoryCard(Map<String, String> history) {
     return Card(
-      margin: EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 16),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Row(
@@ -129,20 +131,20 @@ class _PetProfileScreenState extends State<PetProfileScreen> {
               children: [
                 Text(
                   history['category']!,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 Text(
                   history['details']!,
-                  style: TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 16),
                 ),
                 Text(
                   'Date: ${history['date']}',
-                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                  style: const TextStyle(fontSize: 16, color: Colors.grey),
                 ),
               ],
             ),
             IconButton(
-              icon: Icon(Icons.edit, color: Colors.grey),
+              icon: const Icon(Icons.edit, color: Colors.grey),
               onPressed: () {
                 _editMedicalHistory(context, history);
               },
@@ -162,21 +164,21 @@ class _PetProfileScreenState extends State<PetProfileScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Edit Medical History'),
+          title: const Text('Edit Medical History'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: categoryController,
-                decoration: InputDecoration(labelText: 'Category'),
+                decoration: const InputDecoration(labelText: 'Category'),
               ),
               TextField(
                 controller: detailsController,
-                decoration: InputDecoration(labelText: 'Details'),
+                decoration: const InputDecoration(labelText: 'Details'),
               ),
               TextField(
                 controller: dateController,
-                decoration: InputDecoration(labelText: 'Date'),
+                decoration: const InputDecoration(labelText: 'Date'),
               ),
             ],
           ),
@@ -185,7 +187,7 @@ class _PetProfileScreenState extends State<PetProfileScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
@@ -196,7 +198,7 @@ class _PetProfileScreenState extends State<PetProfileScreen> {
                 });
                 Navigator.of(context).pop();
               },
-              child: Text('Save'),
+              child: const Text('Save'),
             ),
           ],
         );
@@ -213,21 +215,21 @@ class _PetProfileScreenState extends State<PetProfileScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Add Medical History'),
+          title: const Text('Add Medical History'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: categoryController,
-                decoration: InputDecoration(labelText: 'Category'),
+                decoration: const InputDecoration(labelText: 'Category'),
               ),
               TextField(
                 controller: detailsController,
-                decoration: InputDecoration(labelText: 'Details'),
+                decoration: const InputDecoration(labelText: 'Details'),
               ),
               TextField(
                 controller: dateController,
-                decoration: InputDecoration(labelText: 'Date'),
+                decoration: const InputDecoration(labelText: 'Date'),
               ),
             ],
           ),
@@ -236,7 +238,7 @@ class _PetProfileScreenState extends State<PetProfileScreen> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('Cancel'),
+              child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
@@ -249,7 +251,7 @@ class _PetProfileScreenState extends State<PetProfileScreen> {
                 });
                 Navigator.of(context).pop();
               },
-              child: Text('Add'),
+              child: const Text('Add'),
             ),
           ],
         );

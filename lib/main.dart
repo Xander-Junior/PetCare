@@ -8,32 +8,36 @@ import 'package:petcare/screens/home_screen.dart';
 import 'package:petcare/screens/home_screen1.dart';
 import 'package:petcare/screens/profile_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  runApp(PetCareApp());
+  runApp(const PetCareApp());
 }
 
 class PetCareApp extends StatelessWidget {
+  const PetCareApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'PetCare',
       theme: ThemeData(
-        primaryColor: Color(0xFFD3E004),
+        primaryColor: const Color(0xFFD3E004),
         scaffoldBackgroundColor: Colors.white,
         colorScheme: ColorScheme.fromSwatch().copyWith(
-          primary: Color(0xFFD3E004),
+          primary: const Color(0xFFD3E004),
           secondary: Colors.white,
         ),
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        textTheme: TextTheme(
+        textTheme: const TextTheme(
           headlineLarge: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold),
           bodyLarge: TextStyle(color: Colors.black, fontSize: 16),
         ),
-        inputDecorationTheme: InputDecorationTheme(
+        inputDecorationTheme: const InputDecorationTheme(
           filled: true,
           fillColor: Colors.white,
           hintStyle: TextStyle(color: Colors.grey),
@@ -46,21 +50,23 @@ class PetCareApp extends StatelessWidget {
           labelStyle: TextStyle(color: Colors.black),
         ),
       ),
-      home: SplashHandler(),
+      home: const SplashHandler(),
       routes: {
-        '/welcome': (context) => WelcomeScreen(),
+        '/welcome': (context) => const WelcomeScreen(),
         '/login': (context) => LoginScreen(),
         '/signup': (context) => SignUpScreen(),
         '/password-recovery': (context) => PasswordRecoveryScreen(),
-        '/home': (context) => HomeScreen(),
-        '/home1': (context) => HomeScreen1(),
-        '/profile': (context) => ProfileScreen(),
+        '/home': (context) => const HomeScreen(),
+        '/home1': (context) => const HomeScreen1(),
+        '/profile': (context) => const ProfileScreen(),
       },
     );
   }
 }
 
 class SplashHandler extends StatefulWidget {
+  const SplashHandler({super.key});
+
   @override
   _SplashHandlerState createState() => _SplashHandlerState();
 }
@@ -69,19 +75,32 @@ class _SplashHandlerState extends State<SplashHandler> {
   @override
   void initState() {
     super.initState();
-    _navigateToHome();
+    _checkSession();
   }
 
-  _navigateToHome() async {
-    await Future.delayed(Duration(seconds: 2), () {});
+  Future<void> _checkSession() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool onboarded = prefs.getBool('onboarded') ?? false;
+
+    await Future.delayed(const Duration(seconds: 2));
     FlutterNativeSplash.remove();
-    Navigator.pushReplacementNamed(context, '/welcome');
+
+    if (user != null) {
+      Navigator.pushReplacementNamed(context, '/home');
+    } else {
+      if (onboarded) {
+        Navigator.pushReplacementNamed(context, '/login');
+      } else {
+        Navigator.pushReplacementNamed(context, '/welcome');
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFD3E004),
+      backgroundColor: const Color(0xFFD3E004),
       body: Center(
         child: Stack(
           alignment: Alignment.center,
@@ -94,7 +113,7 @@ class _SplashHandlerState extends State<SplashHandler> {
                     color: Colors.black.withOpacity(0.5),
                     spreadRadius: 5,
                     blurRadius: 15,
-                    offset: Offset(0, 3),
+                    offset: const Offset(0, 3),
                   ),
                 ],
               ),

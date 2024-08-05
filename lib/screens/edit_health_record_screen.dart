@@ -5,7 +5,7 @@ import 'dart:io';
 class EditHealthRecordScreen extends StatefulWidget {
   final Map<String, dynamic>? record;
 
-  EditHealthRecordScreen({this.record});
+  const EditHealthRecordScreen({super.key, this.record});
 
   @override
   _EditHealthRecordScreenState createState() => _EditHealthRecordScreenState();
@@ -49,7 +49,7 @@ class _EditHealthRecordScreenState extends State<EditHealthRecordScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.record == null ? 'Add Health Record' : 'Edit Health Record'),
-        backgroundColor: Color(0xFFD3E004),
+        backgroundColor: const Color(0xFFD3E004),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -59,26 +59,26 @@ class _EditHealthRecordScreenState extends State<EditHealthRecordScreen> {
             children: [
               TextField(
                 controller: dateController,
-                decoration: InputDecoration(labelText: 'Date'),
+                decoration: const InputDecoration(labelText: 'Date'),
               ),
               TextField(
                 controller: typeController,
-                decoration: InputDecoration(labelText: 'Type'),
+                decoration: const InputDecoration(labelText: 'Type'),
               ),
               TextField(
                 controller: vetController,
-                decoration: InputDecoration(labelText: 'Vet'),
+                decoration: const InputDecoration(labelText: 'Vet'),
               ),
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
               selectedImage != null
                   ? Image.file(File(selectedImage!.path), height: 100)
-                  : Text('No image selected'),
-              SizedBox(height: 10),
+                  : const Text('No image selected'),
+              const SizedBox(height: 10),
               ElevatedButton(
                 onPressed: _pickImage,
-                child: Text('Add Image'),
+                child: const Text('Add Image'),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -86,11 +86,11 @@ class _EditHealthRecordScreenState extends State<EditHealthRecordScreen> {
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
-                    child: Text('Cancel'),
+                    child: const Text('Cancel'),
                   ),
                   ElevatedButton(
                     onPressed: _saveRecord,
-                    child: Text('Save'),
+                    child: const Text('Save'),
                   ),
                 ],
               ),

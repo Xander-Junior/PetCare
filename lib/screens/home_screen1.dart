@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class HomeScreen1 extends StatelessWidget {
+  const HomeScreen1({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
+        title: const Center(
           child: Text(
             'PetCare Home',
             style: TextStyle(
@@ -18,7 +20,7 @@ class HomeScreen1 extends StatelessWidget {
         elevation: 0, // Remove the shadow
         actions: [
           IconButton(
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
             onPressed: () {
               // Implement search functionality
             },
@@ -29,7 +31,7 @@ class HomeScreen1 extends StatelessWidget {
         // Implement drawer if needed
         child: ListView(
           children: [
-            DrawerHeader(
+            const DrawerHeader(
               decoration: BoxDecoration(
                 color: Color(0xFFD3E004),
               ),
@@ -42,15 +44,15 @@ class HomeScreen1 extends StatelessWidget {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.home),
-              title: Text('Home'),
+              leading: const Icon(Icons.home),
+              title: const Text('Home'),
               onTap: () {
                 // Navigate to home
               },
             ),
             ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Settings'),
+              leading: const Icon(Icons.settings),
+              title: const Text('Settings'),
               onTap: () {
                 // Navigate to settings
               },
@@ -77,22 +79,22 @@ class HomeScreen1 extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               // Daily Health Tips Card
               Card(
                 color: Colors.grey[200],
-                margin: EdgeInsets.only(bottom: 16),
+                margin: const EdgeInsets.only(bottom: 16),
                 child: Column(
                   children: [
                     ListTile(
-                      leading: CircleAvatar(
+                      leading: const CircleAvatar(
                         backgroundImage: AssetImage(
                             'assets/bg6.jpg'), // Replace with your image path
                       ),
-                      title: Text('Daily Health Tips'),
-                      subtitle: Text('Upcoming Reminders'),
+                      title: const Text('Daily Health Tips'),
+                      subtitle: const Text('Upcoming Reminders'),
                       trailing: IconButton(
-                        icon: Icon(Icons.more_vert),
+                        icon: const Icon(Icons.more_vert),
                         onPressed: () {
                           // Implement more options
                         },
@@ -106,8 +108,8 @@ class HomeScreen1 extends StatelessWidget {
                         fit: BoxFit.cover,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
+                    const Padding(
+                      padding: EdgeInsets.all(16.0),
                       child: Text('More', style: TextStyle(color: Colors.blue)),
                     ),
                   ],
@@ -116,18 +118,18 @@ class HomeScreen1 extends StatelessWidget {
               // Recent Activity Log Card
               Card(
                 color: Colors.grey[200],
-                margin: EdgeInsets.only(bottom: 16),
+                margin: const EdgeInsets.only(bottom: 16),
                 child: Column(
                   children: [
                     ListTile(
-                      leading: CircleAvatar(
+                      leading: const CircleAvatar(
                         backgroundImage: AssetImage(
                             'assets/bg6.jpg'), // Replace with your image path
                       ),
-                      title: Text('Recent Activity Log'),
-                      subtitle: Text('Recent Activity Log'),
+                      title: const Text('Recent Activity Log'),
+                      subtitle: const Text('Recent Activity Log'),
                       trailing: IconButton(
-                        icon: Icon(Icons.more_vert),
+                        icon: const Icon(Icons.more_vert),
                         onPressed: () {
                           // Implement more options
                         },
@@ -141,8 +143,8 @@ class HomeScreen1 extends StatelessWidget {
                         fit: BoxFit.cover,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
+                    const Padding(
+                      padding: EdgeInsets.all(16.0),
                       child: Text('More', style: TextStyle(color: Colors.blue)),
                     ),
                   ],
@@ -165,8 +167,8 @@ class HomeScreen1 extends StatelessWidget {
             backgroundImage:
                 AssetImage(imagePath), // Replace with your image path
           ),
-          SizedBox(height: 8),
-          Text(label, style: TextStyle(fontSize: 12)),
+          const SizedBox(height: 8),
+          Text(label, style: const TextStyle(fontSize: 12)),
         ],
       ),
     );

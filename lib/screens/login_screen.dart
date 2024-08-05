@@ -1,25 +1,76 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:petcare/screens/password_recovery_screen.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  bool rememberMe = false;
+  bool passwordVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadRememberMe();
+  }
+
+  Future<void> _loadRememberMe() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      rememberMe = prefs.getBool('rememberMe') ?? false;
+      if (rememberMe) {
+        emailController.text = prefs.getString('email') ?? '';
+        passwordController.text = prefs.getString('password') ?? '';
+      }
+    });
+  }
+
+  Future<void> _login(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      if (rememberMe) {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('rememberMe', true);
+        await prefs.setString('email', emailController.text);
+        await prefs.setString('password', passwordController.text);
+      } else {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.remove('email');
+        await prefs.remove('password');
+        await prefs.setBool('rememberMe', false);
+      }
+      Navigator.pushReplacementNamed(context, '/home');
+    } on FirebaseAuthException catch (e) {
+      print(e.message);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message!)),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Set the scaffold background color
-      resizeToAvoidBottomInset: false, // Prevent background color flash
+      backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
       body: Column(
         children: [
           // Top Image
           Container(
             height: MediaQuery.of(context).size.height * 0.35,
             width: double.infinity,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(
-                    'assets/bg1.jpg'), // Replace with your image asset
+                image: AssetImage('assets/bg1.jpg'),
                 fit: BoxFit.cover,
               ),
             ),
@@ -27,8 +78,8 @@ class LoginScreen extends StatelessWidget {
           // Login Form
           Expanded(
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
-              decoration: BoxDecoration(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
+              decoration: const BoxDecoration(
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
@@ -42,8 +93,7 @@ class LoginScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Welcome Texts
-                    Text(
+                    const Text(
                       'Welcome Pet Lovers!',
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -52,7 +102,7 @@ class LoginScreen extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    Text(
+                    const Text(
                       'Connect with other pet owners now',
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -60,66 +110,70 @@ class LoginScreen extends StatelessWidget {
                         fontSize: 16,
                       ),
                     ),
-                    SizedBox(height: 20),
-                    // Login Fields
+                    const SizedBox(height: 20),
                     TextField(
                       controller: emailController,
                       decoration: InputDecoration(
                         labelText: 'Email',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: Colors.grey,
                             width: 2,
                           ),
                         ),
                       ),
                     ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     TextField(
                       controller: passwordController,
                       decoration: InputDecoration(
                         labelText: 'Password',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide(
+                          borderSide: const BorderSide(
                             color: Colors.grey,
                             width: 2,
                           ),
                         ),
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            passwordVisible ? Icons.visibility : Icons.visibility_off,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              passwordVisible = !passwordVisible;
+                            });
+                          },
+                        ),
                       ),
-                      obscureText: true,
+                      obscureText: !passwordVisible,
                     ),
-                    SizedBox(height: 20),
-                    // Login Button
+                    const SizedBox(height: 20),
                     ElevatedButton(
-                      onPressed: () {
-                        // Implement login functionality
-                        Navigator.pushNamed(context, '/home');
-                        // Navigator.pushNamed(context, 'home1');
-                      },
+                      onPressed: () => _login(context),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            Color(0xFFD3E004), // Button background color
-                        foregroundColor: Colors.white, // Button text color
-                        padding: EdgeInsets.symmetric(vertical: 16),
-                        textStyle: TextStyle(fontSize: 18),
+                        backgroundColor: const Color(0xFFD3E004),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        textStyle: const TextStyle(fontSize: 18),
                       ),
-                      child: Text('Log in'),
+                      child: const Text('Log in'),
                     ),
-                    // Remember me and Forgot Password
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
                           children: [
                             Checkbox(
-                              value: false,
+                              value: rememberMe,
                               onChanged: (value) {
-                                // Handle remember me
+                                setState(() {
+                                  rememberMe = value ?? false;
+                                });
                               },
                             ),
-                            Text('Remember me'),
+                            const Text('Remember me'),
                           ],
                         ),
                         TextButton(
@@ -131,29 +185,28 @@ class LoginScreen extends StatelessWidget {
                                       PasswordRecoveryScreen()),
                             );
                           },
-                          child: Text(
+                          child: const Text(
                             'Forgot your password?',
                             style: TextStyle(
-                                color: const Color.fromARGB(255, 33, 165, 221)),
+                                color: Color.fromARGB(255, 33, 165, 221)),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 20),
-                    // Sign Up Prompt
+                    const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           'Don\'t have an account?',
                           style: TextStyle(
-                              color: const Color.fromARGB(255, 97, 97, 97)),
+                              color: Color.fromARGB(255, 97, 97, 97)),
                         ),
                         TextButton(
                           onPressed: () {
                             Navigator.pushNamed(context, '/signup');
                           },
-                          child: Text(
+                          child: const Text(
                             'Join our community',
                             style: TextStyle(
                               color: Color(0xFFD3E004),
