@@ -295,7 +295,7 @@ class HomeTab extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const PetDiariesScreen()),
+                          builder: (context) =>  PetDiariesScreen()),
                     );
                   },
                   child: const FeatureCard(title: 'Pet Diaries'),

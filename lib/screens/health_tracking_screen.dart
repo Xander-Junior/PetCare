@@ -1,7 +1,10 @@
-import 'package:flutter/material.dart';
 import 'dart:io';
+
+import 'package:flutter/material.dart';
 import 'package:flutter_charts/flutter_charts.dart';
-import 'edit_health_record_screen.dart';  // Import the new screen
+import 'package:intl/intl.dart';
+import 'package:petcare/screens/edit_health_record_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HealthTrackingScreen extends StatefulWidget {
   const HealthTrackingScreen({super.key});
@@ -14,12 +17,36 @@ class _HealthTrackingScreenState extends State<HealthTrackingScreen> {
   String weight = '20kg';
   String temperature = '38°C';
   String heartRate = '75 bpm';
+  String petName = 'Buddy';
+  String breed = 'Golden Retriever';
+  String age = '5 Years';
 
   List<Map<String, dynamic>> healthRecords = [
     {'date': '2023-09-15', 'type': 'General Check-up', 'vet': 'Dr. Smith', 'image': null},
     {'date': '2023-08-20', 'type': 'Vaccination', 'vet': 'Dr. Brown', 'image': null},
     {'date': '2023-07-10', 'type': 'Dental Check-up', 'vet': 'Dr. Lee', 'image': null},
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfileData();
+  }
+
+  Future<void> _loadProfileData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      petName = prefs.getString('petName') ?? 'Buddy';
+      breed = prefs.getString('breed') ?? 'Golden Retriever';
+      String? dobString = prefs.getString('dob');
+      if (dobString != null) {
+        DateTime dob = DateFormat('dd-MM-yyyy').parse(dobString);
+        int years = DateTime.now().year - dob.year;
+        age = '$years Years';
+      }
+      weight = prefs.getString('weight') ?? '25 kg'; // Ensure to save weight in the ProfileScreen
+    });
+  }
 
   Future<void> _addEditHealthRecord({Map<String, dynamic>? record}) async {
     final result = await Navigator.of(context).push(
@@ -84,6 +111,9 @@ class _HealthTrackingScreenState extends State<HealthTrackingScreen> {
                   weight = tempWeight;
                   temperature = tempTemperature;
                   heartRate = tempHeartRate;
+                });
+                SharedPreferences.getInstance().then((prefs) {
+                  prefs.setString('weight', weight);
                 });
                 Navigator.of(context).pop();
               },
@@ -229,15 +259,6 @@ class _HealthTrackingScreenState extends State<HealthTrackingScreen> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildHealthTip(String title, String description, String imagePath) {
-    return ListTile(
-      leading: Image.asset(imagePath, width: 50, height: 50, fit: BoxFit.cover),
-      title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-      subtitle: Text(description),
-      contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
     );
   }
 

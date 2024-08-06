@@ -29,8 +29,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _loadUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      _petNameController.text = prefs.getString('petName') ?? '';
-      _breedController.text = prefs.getString('breed') ?? '';
+      _petNameController.text = prefs.getString('petName') ?? 'Buddy';
+      _breedController.text = prefs.getString('breed') ?? 'Golden Retriever';
       String? dobString = prefs.getString('dob');
       if (dobString != null) {
         selectedDate = DateFormat('dd-MM-yyyy').parse(dobString);
@@ -70,7 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Profile updated successfully!')),
     );
-    Navigator.pop(context);  // Go back to the home screen
+    Navigator.pop(context);  // Go back to the previous screen
   }
 
   @override

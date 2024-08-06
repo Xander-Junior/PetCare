@@ -1,16 +1,17 @@
-# petcare
+# PetCare
 
-A new Flutter project.
+PetCare is a mobile application designed to help pet owners manage their pets' health and activities efficiently. Built with Flutter and Firebase, it offers features such as health tracking, feeding schedules, activity logs, community support, and reminders.
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- **Health Tracking**: Log and monitor your pet's health metrics such as weight, temperature, and heart rate.
+- **Feeding Schedules**: Set and track feeding times to ensure your pet is fed on time.
+- **Activity Logs**: Log daily activities and routines of your pets.
+- **Community Support**: Connect with other pet owners for advice, tips, and social interaction.
+- **Reminders**: Receive push notifications for feeding times, vet appointments, and medication schedules.
 
-A few resources to get you started if this is your first Flutter project:
+## Installation
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Clone the repository:
+   ```sh
+   git clone https://github.com/yourusername/PetCare.git

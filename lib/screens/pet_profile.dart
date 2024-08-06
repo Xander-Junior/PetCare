@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io';
 
 class PetProfileScreen extends StatefulWidget {
   const PetProfileScreen({super.key});
@@ -8,10 +11,38 @@ class PetProfileScreen extends StatefulWidget {
 }
 
 class _PetProfileScreenState extends State<PetProfileScreen> {
+  String petName = 'Buddy';
+  String breed = 'Golden Retriever';
+  String age = '5 Years';
+  String weight = '25 kg';
+  String? profileImageUrl;
+
   List<Map<String, String>> medicalHistory = [
     {'category': 'Vaccination', 'details': 'Rabies, Distemper, Parvovirus', 'date': '2023-01-15'},
     {'category': 'Allergies', 'details': 'None', 'date': '2023-01-10'},
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProfileData();
+  }
+
+  Future<void> _loadProfileData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      petName = prefs.getString('petName') ?? 'Buddy';
+      breed = prefs.getString('breed') ?? 'Golden Retriever';
+      String? dobString = prefs.getString('dob');
+      if (dobString != null) {
+        DateTime dob = DateFormat('dd-MM-yyyy').parse(dobString);
+        int years = DateTime.now().year - dob.year;
+        age = '$years Years';
+      }
+      weight = prefs.getString('weight') ?? '25 kg'; // Ensure to save weight in the ProfileScreen
+      profileImageUrl = prefs.getString('petProfileImage');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,26 +57,28 @@ class _PetProfileScreenState extends State<PetProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Center(
+              Center(
                 child: CircleAvatar(
-                  backgroundImage: AssetImage('assets/bg6.jpg'),
+                  backgroundImage: profileImageUrl != null
+                      ? FileImage(File(profileImageUrl!))
+                      : const AssetImage('assets/bg6.jpg') as ImageProvider,
                   radius: 80,
                 ),
               ),
               const SizedBox(height: 16),
-              const Center(
+              Center(
                 child: Column(
                   children: [
                     Text(
-                      'Buddy',
-                      style: TextStyle(
+                      petName,
+                      style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      'Golden Retriever',
-                      style: TextStyle(
+                      breed,
+                      style: const TextStyle(
                         fontSize: 18,
                         color: Colors.grey,
                       ),
@@ -66,9 +99,9 @@ class _PetProfileScreenState extends State<PetProfileScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildDetailRow('Age', '5 Years'),
-                      _buildDetailRow('Weight', '25 kg'),
-                      _buildDetailRow('Breed', 'Golden Retriever'),
+                      _buildDetailRow('Age', age),
+                      _buildDetailRow('Weight', weight),
+                      _buildDetailRow('Breed', breed),
                     ],
                   ),
                 ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:petcare/screens/notification_service.dart';
 import 'package:petcare/screens/welcome_screen.dart';
 import 'package:petcare/screens/login_screen.dart';
 import 'package:petcare/screens/signup_screen.dart';
@@ -10,11 +11,30 @@ import 'package:petcare/screens/profile_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+import 'package:awesome_notifications/awesome_notifications.dart';
+
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  tz.initializeTimeZones(); // Initialize the time zone database
+  await NotificationService.initialize();
+
+    AwesomeNotifications().initialize(
+    'resource://drawable/res_app_icon',
+    [
+      NotificationChannel(
+        channelKey: 'basic_channel',
+        channelName: 'Basic notifications',
+        channelDescription: 'Notification channel for basic tests',
+        defaultColor: Color(0xFF9D50DD),
+        ledColor: Colors.white,
+      )
+    ],
+  );
+
   runApp(const PetCareApp());
 }
 
@@ -84,7 +104,6 @@ class _SplashHandlerState extends State<SplashHandler> {
     bool onboarded = prefs.getBool('onboarded') ?? false;
 
     await Future.delayed(const Duration(seconds: 2));
-    FlutterNativeSplash.remove();
 
     if (user != null) {
       Navigator.pushReplacementNamed(context, '/home');

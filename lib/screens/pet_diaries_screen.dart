@@ -1,9 +1,68 @@
 import 'package:flutter/material.dart';
 import 'package:petcare/screens/new_entry_screen.dart';
 import 'package:petcare/screens/edit_entry_screen.dart';
+import 'package:petcare/screens/diary_entry.dart';
+import 'package:share_files_and_screenshot_widgets_plus/share_files_and_screenshot_widgets_plus.dart';
+import 'dart:typed_data';
+import 'package:flutter/services.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:convert';
 
-class PetDiariesScreen extends StatelessWidget {
-  const PetDiariesScreen({super.key});
+class PetDiariesScreen extends StatefulWidget {
+  @override
+  _PetDiariesScreenState createState() => _PetDiariesScreenState();
+}
+
+class _PetDiariesScreenState extends State<PetDiariesScreen> {
+  List<DiaryEntry> _entries = [
+    DiaryEntry(
+      date: '12/10/2023',
+      title: 'A Day at the Park',
+      content: 'Today, Max had an exciting day at the park...',
+    ),
+    DiaryEntry(
+      date: '11/10/2023',
+      title: 'Vet Visit',
+      content: 'Max had a check-up today. Everything is fine...',
+    ),
+    DiaryEntry(
+      date: '10/10/2023',
+      title: 'New Toy',
+      content: 'Max got a new toy today. He loves it...',
+    ),
+  ];
+
+  GlobalKey previewContainer = GlobalKey();
+
+  void _addNewEntry(DiaryEntry entry) {
+    setState(() {
+      _entries.add(entry);
+    });
+  }
+
+  void _editEntry(DiaryEntry oldEntry, DiaryEntry newEntry) {
+    setState(() {
+      int index = _entries.indexOf(oldEntry);
+      if (index != -1) {
+        _entries[index] = newEntry;
+      }
+    });
+  }
+
+Future<void> _shareEntry(DiaryEntry entry) async {
+  // Convert entry content to bytes for sharing
+  String entryContent = '${entry.title}\n\n${entry.date}\n\n${entry.content}';
+  Uint8List bytes = Uint8List.fromList(utf8.encode(entryContent));
+
+  // Share the entry as a text file
+  await ShareFilesAndScreenshotWidgets().shareFile(
+    'Diary Entry',
+    'entry.txt',
+    bytes,
+    'text/plain',
+    text: 'Sharing Diary Entry',
+  );
+}
 
   @override
   Widget build(BuildContext context) {
@@ -17,20 +76,22 @@ class PetDiariesScreen extends StatelessWidget {
         child: Column(
           children: [
             Expanded(
-              child: ListView(
-                children: [
-                  _buildDiaryCard(context, '12/10/2023', 'A Day at the Park', 'Today, Max had an exciting day at the park...'),
-                  _buildDiaryCard(context, '11/10/2023', 'Vet Visit', 'Max had a check-up today. Everything is fine...'),
-                  _buildDiaryCard(context, '10/10/2023', 'New Toy', 'Max got a new toy today. He loves it...'),
-                ],
+              child: ListView.builder(
+                itemCount: _entries.length,
+                itemBuilder: (context, index) {
+                  return _buildDiaryCard(context, _entries[index]);
+                },
               ),
             ),
             ElevatedButton(
-              onPressed: () {
-                Navigator.push(
+              onPressed: () async {
+                final newEntry = await Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const NewEntryScreen()),
+                  MaterialPageRoute(builder: (context) => NewEntryScreen()),
                 );
+                if (newEntry != null) {
+                  _addNewEntry(newEntry);
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFFD3E004),
@@ -44,7 +105,7 @@ class PetDiariesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDiaryCard(BuildContext context, String date, String title, String content) {
+  Widget _buildDiaryCard(BuildContext context, DiaryEntry entry) {
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       child: Padding(
@@ -52,28 +113,37 @@ class PetDiariesScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(date, style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text(entry.date, style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(entry.title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
-            Text(content),
+            Text(entry.content),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  onPressed: () async {
+                    final editedEntry = await Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => EditEntryScreen(date: date, title: title, content: content)),
+                      MaterialPageRoute(builder: (context) => EditEntryScreen(entry: entry)),
                     );
+                    if (editedEntry != null) {
+                      _editEntry(entry, editedEntry);
+                    }
                   },
-                  child: const Text('Edit', style: TextStyle(color: Colors.green)),
                 ),
-                TextButton(
+                IconButton(
+                  icon: Icon(Icons.delete),
                   onPressed: () {
-                    // Implement delete functionality
+                    setState(() {
+                      _entries.remove(entry);
+                    });
                   },
-                  child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                ),
+                IconButton(
+                  icon: Icon(Icons.share),
+                  onPressed: () => _shareEntry(entry),
                 ),
               ],
             ),

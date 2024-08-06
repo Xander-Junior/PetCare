@@ -46,6 +46,17 @@ dependencies:
   geolocator: ^12.0.0
   location: ^7.0.0
   shared_preferences: ^2.3.1
+  flutter_polyline_points: ^2.1.0
+  timezone: ^0.9.4
+  audioplayers: ^6.0.0
+  path_provider: ^2.1.4
+  share_plus: ^10.0.0
+  record: ^5.1.2
+  flutter_sound: ^9.6.0
+  permission_handler: ^11.3.1
+  share_files_and_screenshot_widgets_plus: ^1.0.4
+  awesome_notifications: ^0.9.3+1 
+  firebase_messaging: ^15.0.4
 
  
 
